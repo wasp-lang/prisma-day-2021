@@ -1,0 +1,51 @@
+app todoTest {
+  title: "todoTest"
+}
+
+auth {
+  userEntity: User,
+  methods: [ EmailAndPassword ],
+  onAuthFailedRedirectTo: "/login"
+}
+
+route "/" -> page Main
+page Main {
+  authRequired: true,
+  component: import Main from "@ext/MainPage.js"
+}
+
+route "/signup" -> page Signup
+page Signup {
+  component: import Signup from "@ext/SignupPage.js"
+}
+
+route "/login" -> page Login
+page Login {
+  component: import Login from "@ext/LoginPage.js"
+}
+
+// -- Queries and actions
+
+action createTask {
+  fn: import { createTask } from "@ext/actions.js",
+  entities: [Task]
+}
+
+query getTasks {
+  fn: import { getTasks } from "@ext/queries.js",
+  entities: [Task]
+}
+
+// -- Entities
+
+entity User {=psl
+    id          Int     @id @default(autoincrement())
+    email       String  @unique
+    password    String
+psl=}
+
+entity Task {=psl
+    id          Int     @id @default(autoincrement())
+    description String
+    isDone      Boolean @default(false)
+psl=}
